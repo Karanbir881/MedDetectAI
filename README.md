@@ -7,8 +7,8 @@ The project can be divided into three main stages : train, test, and deploy.
 <br />• Deployment: Once trained, the deep learning model is cleaned and deployed onto a cloud server to allow for real-time accessibility via the MedDetect AI platform. The platform enables healthcare professionals and users to upload a medical image, and cloud-based model will analyze it. It offers diagnostic insights, helping detect disease like pneumonia, brain tumors, COVID-19, and breast cancer. Through this deployment, the capabilities of MedDetect AI are being made instantly available to users where they need it most, improving access and enabling decision making in healthcare.
 # Clone the repository to your local machine.
 Create a conda environment and install the required libraries
-<br />*conda create -n healthcure python=3.9.13
-<br />*conda activate healthcure 
+<br />*conda create -n MedDetectAI python=3.9.13
+<br />*conda activate MedDetectAI 
 <br />*pip install opencv-python==4.5.1.48 numpy tensorflow==2.12.0 scikit-learn==0.24.2 imutils==0.5.4 flask==3.0.0 xgboost==2.0.3
 <br />When you have successfully created the environment, installed the required libraries, and activated it, simply run the following command in the terminal.
 <br />*flask run
