@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+# user uploads (patient images) must never be committed
+static/uploads/*
+!static/uploads/.gitkeep
+# datasets and training outputs
+data/
+training/outputs/
+
+# local virtual environments
+tf_env/
+training/results/run_log.txt
+push_log.txt
+push_to_github.bat
+fix_commit_message.bat

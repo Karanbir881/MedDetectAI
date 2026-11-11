@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ task.title }} result | MedDetect AI{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for(task.form) }}">{{ task.title }}</a>
+<article class="report {% if positive %}is-positive{% else %}is-negative{% endif %}">
+  <div class="specimen">
+    {% if filename %}
+    <figure class="film">
+      <img src="{{ url_for('static', filename='uploads/' ~ filename) }}" alt="The uploaded {{ task.input|lower }}">
+      <figcaption>{{ task.input }}</figcaption>
+    </figure>
+    {% else %}
+    <table class="values">
+      <caption>Measurements entered</caption>
+      <tbody>
+        {% for label, value, unit in inputs %}
+        <tr><th scope="row">{{ label }}</th><td>{{ value }}{% if unit %} <span class="unit">{{ unit }}</span>{% endif %}</td></tr>
+        {% endfor %}
+        {% if task.uses_age %}<tr><th scope="row">Age</th><td>{{ patient.age }} <span class="unit">years</span></td></tr>{% endif %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+
+  <div class="findings">
+    <p class="report-test">{{ task.title }} detector ({{ task.model }})</p>
+    <h1 class="finding">{{ finding }}</h1>
+
+    <div class="probs" role="group" aria-label="Model probability for each outcome">
+      {% for row in rows %}
+      <div class="prob {% if row.chosen %}chosen{% endif %} {% if row.positive %}pos{% else %}neg{% endif %}">
+        <span class="prob-label">{{ row.label }}</span>
+        <span class="prob-bar" aria-hidden="true"><span style="width: {{ '%.1f'|format(row.p * 100) }}%"></span></span>
+        <span class="prob-value">{{ '%.0f'|format(row.p * 100) }}%</span>
+      </div>
+      {% endfor %}
+    </div>
+    <p class="note">The percentage is the model's score for each outcome. It is not a calibrated risk.</p>
+
+    {% if patient.first_name or patient.last_name or patient.sex or (patient.age and not task.uses_age) %}
+    <dl class="patient">
+      {% if patient.first_name or patient.last_name %}<div><dt>Patient</dt><dd>{{ patient.first_name }} {{ patient.last_name }}</dd></div>{% endif %}
+      {% if patient.age and not task.uses_age %}<div><dt>Age</dt><dd>{{ patient.age }}</dd></div>{% endif %}
+      {% if patient.sex %}<div><dt>Sex</dt><dd>{{ patient.sex }}</dd></div>{% endif %}
+    </dl>
+    {% endif %}
+
+    <p class="caution">This comes from a research prototype and is not a diagnosis. {{ task.limits }}</p>
+
+    <div class="actions">
+      <a class="button" href="{{ url_for(task.form) }}">Analyse another</a>
+      <a class="button quiet" href="{{ url_for('home') }}">All detectors</a>
+    </div>
+  </div>
+</article>
+{% endblock %}

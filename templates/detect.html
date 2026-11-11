@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}{{ task.title }} | MedDetect AI{% endblock %}
+{% block content %}
+<a class="back" href="{{ url_for('home') }}">All detectors</a>
+<div class="detect">
+  <aside class="detect-info">
+    <h1>{{ task.title }}</h1>
+    <p class="lede">{{ task.about }}</p>
+    <dl class="facts">
+      <div><dt>Needs</dt><dd>{{ task.input }}</dd></div>
+      <div><dt>Model</dt><dd>{{ task.model }}</dd></div>
+      <div><dt>Limits</dt><dd>{{ task.limits }}</dd></div>
+    </dl>
+  </aside>
+
+  <form class="detect-form" action="{{ url_for(task.post) }}" method="post" enctype="multipart/form-data">
+    {% if task.kind == "image" %}
+    <fieldset>
+      <legend>Scan</legend>
+      <label class="drop" for="file" data-drop>
+        <input type="file" id="file" name="file" accept="image/png,image/jpeg" required>
+        <img class="drop-preview" alt="" hidden>
+        <span class="drop-text"><strong>Choose an image</strong> or drop it here</span>
+        <span class="drop-hint">{{ task.upload_hint }} Up to 10 MB.</span>
+      </label>
+    </fieldset>
+    {% else %}
+    <fieldset>
+      <legend>Measurements</legend>
+      <div class="field-grid">
+        {% for f in task.fields %}
+        <div class="field">
+          <label for="{{ f.name }}">{{ f.label }}{% if f.unit %} <span class="unit">{{ f.unit }}</span>{% endif %}</label>
+          {% if f.options %}
+          <select id="{{ f.name }}" name="{{ f.name }}" aria-describedby="{{ f.name }}-help" required>
+            {% for value, text in f.options %}<option value="{{ value }}">{{ text }}</option>{% endfor %}
+          </select>
+          {% else %}
+          <input type="number" id="{{ f.name }}" name="{{ f.name }}" inputmode="decimal"
+                 step="{{ f.step or 'any' }}"{% if f.min is defined %} min="{{ f.min }}"{% endif %}
+                 aria-describedby="{{ f.name }}-help" required>
+          {% endif %}
+          <small id="{{ f.name }}-help">{{ f.help }}</small>
+        </div>
+        {% endfor %}
+        {% if task.uses_age %}
+        <div class="field">
+          <label for="age">Age <span class="unit">years</span></label>
+          <input type="number" id="age" name="age" min="0" max="120" step="1" aria-describedby="age-help" required>
+          <small id="age-help">Age at the time of the measurements</small>
+        </div>
+        {% endif %}
+      </div>
+    </fieldset>
+    {% endif %}
+
+    <fieldset>
+      <legend>Patient <span class="optional">shown on the result only, never stored</span></legend>
+      <div class="field-grid">
+        <div class="field">
+          <label for="firstname">First name <span class="unit">optional</span></label>
+          <input type="text" id="firstname" name="firstname" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="lastname">Last name <span class="unit">optional</span></label>
+          <input type="text" id="lastname" name="lastname" autocomplete="off">
+        </div>
+        {% if not task.uses_age %}
+        <div class="field">
+          <label for="age">Age <span class="unit">optional</span></label>
+          <input type="number" id="age" name="age" min="0" max="120" step="1">
+        </div>
+        {% endif %}
+        <div class="field">
+          <label for="gender">Sex <span class="unit">optional</span></label>
+          <select id="gender" name="gender">
+            <option value="">Not given</option><option value="Female">Female</option><option value="Male">Male</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <button class="button" type="submit">{% if task.kind == "image" %}Analyse scan{% else %}Analyse measurements{% endif %}</button>
+  </form>
+</div>
+{% endblock %}
+{% block scripts %}
+{% if task.kind == "image" %}
+<script>
+(function () {
+  var drop = document.querySelector('[data-drop]');
+  if (!drop) return;
+  var input = drop.querySelector('input');
+  var preview = drop.querySelector('.drop-preview');
+  var text = drop.querySelector('.drop-text');
+  function show(file) {
+    if (!file) return;
+    preview.src = URL.createObjectURL(file);
+    preview.hidden = false;
+    drop.classList.add('has-file');
+    text.innerHTML = '<strong>' + file.name.replace(/[<>&]/g, '') + '</strong>. Click to choose a different image.';
+  }
+  input.addEventListener('change', function () { show(input.files[0]); });
+  ['dragenter', 'dragover'].forEach(function (e) {
+    drop.addEventListener(e, function (ev) { ev.preventDefault(); drop.classList.add('dragging'); });
+  });
+  ['dragleave', 'drop'].forEach(function (e) {
+    drop.addEventListener(e, function (ev) { ev.preventDefault(); drop.classList.remove('dragging'); });
+  });
+  drop.addEventListener('drop', function (ev) {
+    if (ev.dataTransfer.files.length) { input.files = ev.dataTransfer.files; show(input.files[0]); }
+  });
+})();
+</script>
+{% endif %}
+{% endblock %}

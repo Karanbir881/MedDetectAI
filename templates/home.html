@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <h1>Seven disease detectors for scans and clinical measurements.</h1>
+  <p class="lede">Upload a chest X-ray or brain MRI, or enter a patient's measurements. Each result shows the
+    model's probability for every outcome, so you can see how sure it is.</p>
+</section>
+
+{% macro menu(id, heading, intro, tasks) %}
+<section class="menu" id="{{ id }}" aria-labelledby="{{ id }}-h">
+  <div class="menu-head">
+    <h2 id="{{ id }}-h">{{ heading }}</h2>
+    <p>{{ intro }}</p>
+  </div>
+  <ul class="menu-list">
+    {% for t in tasks %}
+    <li>
+      <a class="menu-item" href="{{ url_for(t.form) }}">
+        <span class="menu-name">{{ t.title }}</span>
+        <span class="menu-about">{{ t.about }}</span>
+        <span class="menu-meta"><span>{{ t.input }}</span><span>{{ t.model }}</span></span>
+        <span class="menu-go" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M7 4l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endmacro %}
+
+{{ menu("scans", "Read a scan", "Upload one image. It is resized and checked by a neural network.", imaging) }}
+{{ menu("measurements", "Enter measurements", "Type in values from a patient record or test report.", clinical) }}
+
+<section class="about" id="about" aria-labelledby="about-h">
+  <h2 id="about-h">About this project</h2>
+  <div class="about-cols">
+    <p>MedDetect AI is a bachelor's project that brings seven detectors under one interface. It comes with a
+      training and evaluation pipeline that compares each model with a retrained baseline on the same data,
+      so their accuracy can be measured rather than assumed.</p>
+    <p>Every detector here was trained on a small public dataset and has known limits, listed on its page.
+      Use it to explore what these models can and can't do, not to make decisions about anyone's health.</p>
+  </div>
+</section>
+{% endblock %}
