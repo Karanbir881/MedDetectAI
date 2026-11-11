@@ -152,5 +152,5 @@ tumour figure came from a test set of 10 images.
 
 ## Authors
 
-MedDetect AI changes: Karanbir Singh 
-Original HealthCure app and models: Abhishek Sharma.
+MedDetect AI : Karanbir Singh 
+
