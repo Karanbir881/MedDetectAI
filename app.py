@@ -1,11 +1,5 @@
 """
 MedDetect AI - Flask web app for seven disease detections.
-
-Based on HealthCure by Abhishek Sharma
-(https://machinelearningprojects.net/healthcure-medical-project/), which
-provided the original web app and pretrained models. See README.md for the
-list of changes made in this project.
-
 This is a research prototype, not a medical device.
 """
 import os
