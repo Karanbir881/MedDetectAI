@@ -11,7 +11,7 @@ Examples
   python -m training.train_tabular --task diabetes --csv data/diabetes.csv
   # heart: UCI Heart Disease (Cleveland) CSV
   python -m training.train_tabular --task heart --csv data/heart.csv
-  # evaluate the pretrained HealthCure model on the same test split (baseline)
+ 
   python -m training.train_tabular --task breastcancer --evaluate models/cancer_model.pkl
 """
 import argparse
@@ -52,8 +52,7 @@ NOT_FEATURES = {"id", "diagnosis", "Unnamed: 32"}
 def load_table(task, csv):
     """Returns X_app, X_all, y, spec, all_column_names.
 
-    X_app holds the columns the web form collects, X_all every feature column in the CSV.
-    Cleaning matches the HealthCure notebooks, plus duplicate removal.
+    
     """
     spec = TASKS[task]
     if csv is None:
@@ -109,7 +108,7 @@ def load_model(path):
     except Exception as err:
         import sklearn
         raise SystemExit(f"could not load {path} with scikit-learn {sklearn.__version__}: {err}\n"
-                         "The HealthCure models need scikit-learn 1.0.2 (pip install -r requirements.txt).")
+                       
 
 
 def main():
