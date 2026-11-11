@@ -13,8 +13,7 @@ breast cancer).
 This project is built on **HealthCure** by **Abhishek Sharma**
 ([project page](https://machinelearningprojects.net/healthcure-medical-project/),
 2021). HealthCure provided the original Flask app, the HTML templates and the
-seven pretrained models in `models/`. The credit is kept here in the README; the app's
-pages carry only the MedDetect AI name.
+seven pretrained models in `models/`.
 
 ## What we changed
 
