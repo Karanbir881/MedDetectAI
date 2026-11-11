@@ -1,11 +1,4 @@
-"""Preprocessing shared by the web app (app.py) and the training code (training/),
-so a model is always served with exactly the inputs it was trained on.
 
-Image functions take OpenCV BGR uint8 arrays, as returned by cv2.imread. The
-HealthCure models were trained with Keras' ImageDataGenerator.flow_from_directory,
-which loads images as RGB and resizes with nearest-neighbour interpolation, so
-model_input converts to RGB and resizes the same way.
-"""
 import numpy as np
 
 # Input size for each image task.
