@@ -3,10 +3,6 @@
   python -m training.run_image_experiments --data "C:\\Users\\Karan\\Downloads\\meddetect\\meddetectAI"
   python -m training.run_image_experiments --data ... --tasks braintumor covid --quick
 
---data is the HealthCure dataset folder (with "Covid Detection", "Pneumonia Detection", ...).
-For every task this runs, on the same images:
-  existing   the saved HealthCure model as is (may have seen the test images)
-  baseline   HealthCure's architecture retrained (the fair baseline)
   improved   our CNN, MobileNetV2 + fine-tuning, EfficientNetB0 + fine-tuning
              (VGG16 with and without fine-tuning for brain tumour)
 Small datasets (COVID, brain tumour) use 5-fold CV over all images; pneumonia and
